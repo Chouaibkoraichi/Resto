@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+    <style>
+        /* Add your background image URL and other styles here */
+        body {
+            background: url([[@{../../../../pictures/backgroundrestaurant.JPG}]])
+                no-repeat center center fixed;
+                            background-color: #2C3E50; /* Dark Grey */
+            color: #ECF0F1; /* Light Grey */
+        }
+
+        .container {
+            background-color: #34495E; /* Slightly lighter than body */
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #2C3E50;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: grey; /* Blue */
+            border-color: rgb(23, 22, 22);
+        }
+
+        .btn-primary:hover {
+            background-color: #2980B9; /* Darker Blue */
+            border-color: #2980B9;
+        }
+
+        .table {
+            background-color: #34495E;
+            color: #ECF0F1;
+        }
+
+        .modal-content {
+            background-color: #2C3E50;
+            color: #ECF0F1;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #3498DB; /* Blue */
+        }
+
+        .modal-title {
+            color: #3498DB; /* Blue */
+        }
+
+        .form-control {
+            background-color: #34495E;
+            color: #ECF0F1;
+        }
+
+        .form-control::placeholder {
+            color: #7F8C8D; /* Grey */
+        }
+    </style>
+    <!-- Bootstrap CSS and JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+<div class="container my-2">
+    <div class="card">
+        <div class="card-body">
+            <div th:switch="${restaurant}" class="container my-5">
+                <p class="my-5">
+                    <!-- <a href="/restaurant/post" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"><i
+                            class="fas fa-user-plus ml-2"> Ajouter un restaurant</i></a> -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createRestaurantModal">
+                                Create Restaurant
+                            </button>
+                
+                           
+
+                </p>
+                <select class="btn btn-primary" id="nameFilter">
+                    <option th:value="${empty}" th:text="${select}"></option>
+                    <option th:each="add : ${Address}" th:value="${add}" th:text="${add}"></option>
+                </select>
+                <select class="btn btn-primary" id="specialiteFilter">
+                    <option th:value="${empty}" th:text="${selectSp}"></option>
+                    <option th:each="spe : ${specialite}" th:value="${spe}" th:text="${spe}"></option>
+                </select>
+                <button  type="button" class="btn btn-primary" onclick="filterRestaurants()"><i
+                    class="fa fa-search"> Rechercher </i></button>
+                <br /><br />
+                <div class="col-md-10">
+                    <h2 th:case="null">Aucun Restaurant !</h2>
+                    <div th:case="*">
+                        <table id="restaurantTable" class="table table-striped table-responsive-md">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Ville</th>
+                                <th>Specialité</th>                                
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="resto : ${restaurant}">
+                                <td th:text="${resto.name}"></td>
+                                <td th:text="${resto.ville}"></td>
+                                <td th:text="${resto.specialite}"></td>
+                                <td><a class="btn btn-primary"
+                                    data-toggle="modal" data-target="#updateRestaurantModal"><i class="fas fa-user-edit ml-2"></i></a></td>
+                                <td><a th:href="@{/delete/{id}(id=${resto.id})}" class="btn btn-primary" ><i class="fas fa-user-times ml-2"></i></a></td>
+                            </tr>
+                            </tbody>
+                        </table>                    
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Create Restaurant Modal -->
+<div class="modal fade" id="createRestaurantModal" tabindex="-1" role="dialog" aria-labelledby="createRestaurantModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createRestaurantModalLabel">Create Restaurant</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form to create a new restaurant -->
+                <form id="createRestaurantForm">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ville">Ville:</label>
+                        <select class="form-control" id="ville"  name="ville" required>
+                            <option value="" disabled selected>Select Ville</option>
+                            <option th:each="add : ${Address}" th:value="${add}" th:text="${add}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialite">Specialite:</label>
+                        <select class="form-control" id="specialite" name="specialite" required>
+                            <option value="" disabled selected>Select Specialite</option>
+                            <option th:each="spe : ${specialite}" th:value="${spe}" th:text="${spe}"></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to submit the form via AJAX -->
+<script>
+    $(document).ready(function () {
+        $('#createRestaurantForm').submit(function (event) {
+            event.preventDefault();
+            console.log("Form submitted");
+            
+            var formData = {
+                name: $('#name').val(),
+                ville: $('#ville').val(),
+                specialite: $('#specialite').val()
+            };
+            console.log(JSON.stringify(formData));
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/restaurant/post', // Adjust the URL based on your mapping
+                data: JSON.stringify(formData),
+                success: function (data) {
+                    // Handle success (e.g., close the modal, update the UI)
+                    console.log("restaurant created")
+                    $('#createRestaurantModal').modal('hide');
+                    alert("restaurant created successfully");
+                                },
+                error: function (error) {
+                    // Handle error (e.g., display an error message)
+                    console.log('Error:', error);
+                }
+            });
+        });
+    });
+
+
+</script>
+<script>
+    function filterRestaurants() {
+    // Get filter criteria from input fields
+    var specialite = $('#specialiteFilter').val();
+    var name = $('#nameFilter').val();
+
+    // Make AJAX request to filter restaurants
+    $.ajax({
+        type: 'GET',
+        url: '/restaurant/find',
+        data: {
+            specialite: specialite,
+            name: name
+        },
+        success: function (data) {
+            // Handle the filtered data as needed
+            // For example, update the UI with the filtered results
+            console.log(data)
+            updateUIWithData(data);
+        },
+        error: function (error) {
+            console.log('Error:', error);
+        }
+    });
+}
+
+function updateUIWithData(filteredData) {
+        // Get the table body element
+    var tableBody = $('#restaurantTable tbody');
+
+// Clear existing rows
+tableBody.empty();
+
+// Iterate over the filtered data and append rows to the existing table
+$.each(filteredData, function (index, restaurant) {
+    var row = '<tr>' +
+        '<td>' + restaurant.name + '</td>' +
+        '<td>' + restaurant.ville + '</td>' +
+        '<td>' + restaurant.specialite + '</td>' +
+        '<td><a class="btn btn-primary" data-toggle="modal" data-target="#updateRestaurantModal" onclick="openUpdateModal(' + restaurant.id + ')"><i class="fas fa-user-edit ml-2"></i></a></td>' +
+        '<td><a th:href="@{/delete/{id}(id=' + restaurant.id + ')}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>' +
+        '</tr>';
+
+    tableBody.append(row);
+});
+    }
+
+    // Function to open the update modal with the selected restaurant ID
+    function openUpdateModal(restaurantId) {
+        // Add logic to open the update modal with the selected ID
+        // You can use the restaurantId to fetch details and pre-fill the modal form
+    }
+
+
+
+</script>
+</body>
+</html>

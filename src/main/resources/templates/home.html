@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>FindMyrestaurant</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; /* Align children vertically */
+            justify-content: center;
+            align-items: center;
+            background-image: url('../pictures/backgroundrestaurant.JPG');
+ 
+            background: url([[@{/images/backgroundrestaurant.JPG}]])
+                no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 50px; /* Add space below the title */
+        }
+
+        .card {
+            margin-top: 30px;
+            background-image: url('../pictures/backgroundrestaurant.JPG');
+
+        }
+
+        button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            background-image: url('../pictures/backgroundrestaurant.JPG');
+
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        
+    <div class="container home">
+        <div>
+            <h1>Vous cherchez un Restaurant ?</h1>
+        </div>
+    </div>
+
+    <div class="card">
+        <button><a th:href="@{/restaurant/locate}">Trouver mon Restaurant</a></button>
+    </div>
+    </div>
+</body>
+</html>

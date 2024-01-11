@@ -5,7 +5,11 @@ and ratings, and leave their own reviews. Users can also filter restaurants by t
 is built using Spring Boot and utilizes a MySQL database to store all information. 
 
 Libraries and Frameworks used:
-- Spring Boot: used as the main framework for building the back-end of the application.
+- Spring Boot: used as the mai![3](https://github.com/Chouaibkoraichi/Resto/assets/147485171/bc0ae8b6-a712-473b-a153-2c5a8a0b10f9)
+![1](https://github.com/Chouaibkoraichi/Resto/assets/147485171/19a41778-9113-47d4-9e39-11fbf58f59d4)
+![Capture](https://github.com/Chouaibkoraichi/Resto/assets/147485171/1144137f-04a0-4443-9f5d-eb162c579a4e)
+![4](https://github.com/Chouaibkoraichi/Resto/assets/147485171/afb76c0f-a088-4355-8c93-7ffec973902f)
+n framework for building the back-end of the application.
 - Hibernate: used as the ORM tool for mapping the entities to the database.
 - JUnit: used for unit testing
 
